@@ -28,7 +28,7 @@
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-middle">
               <li><a href="#Home">Home</a></li>
-              <li><select id="data-picker">
+              <li><select id="data-picker" name = 'selecter'>
                   <option value="INC-17">INC-17</option>
                   <option value="Utoy Railroad">Utoy Railroad</option>
               </select></li>
@@ -37,10 +37,12 @@
                 <option value="Rainfall">Rainfall</option>
             </select></li>
             </ul>
+            <button class= "btn btn-default btn-download" id="button_download"><a href="{{ url_for('static', filename='INC-17.csv') }}">Download</a> </button>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
+
       </nav>
       
     <script type="text/javascript" src ="{{ url_for('static', filename='script.js') }}"></script>
-
+ 
 </body>

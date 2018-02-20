@@ -32,3 +32,7 @@ path {
     stroke-width: 1;
     shape-rendering: crispEdges;
 }
+#button_download{
+    margin-top: 7px;
+    margin-left: 20px;
+}
