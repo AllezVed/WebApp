@@ -1,13 +1,16 @@
 from flask import *
 app = Flask (__name__)
 
+
+DATABASE = 'testdb.db'
+
 @app.route('/')
 def index():
     
     return render_template('index.html')
 def connect_db():
     """Connects to the specific database."""
-    rv = sqlite3.connect('testdb.db')
+    rv = sqlite3.connect(DATABASE)
     rv.row_factory = sqlite3.Row
     return rv
 def get_db():
