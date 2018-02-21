@@ -20,19 +20,17 @@ var w = window.innerWidth - margin.right - margin.left;
 var h = window.innerHeight - margin.bottom - margin.top;
 
 // Set the ranges of axes
-var x = d3.time.scale().range([0, w]);
-var y = d3.scale.linear().range([h, 0]);
+var x = d3.scaleTime().range([0, w]);
+var y = d3.scaleLinear().range([h, 0]);
 
 //Define the axes
-var xAxis = d3.svg.axis().scale(x)
-.orient("bottom")
+var xAxis = d3.axisBottom(x);
 
-var yAxis = d3.svg.axis().scale(y)
-.orient("left")
+var yAxis = d3.axisLeft(y);
 
 //Parse the date / time 
 
-var parseDate = d3.time.format("%m/%d/%Y %H:%M").parse;
+var parseDate = d3.timeParse("%m/%d/%Y %H:%M");
 
 
 var svg = d3.select("body")
@@ -67,8 +65,9 @@ var drawChart = function(csvFile){
 
         // Add the valueline path.
         svg.append("path")
+            .data([data])
             .attr("class", "line")
-            .attr("d", valueline(data));
+            .attr("d", valueline);
 
         // Add the X Axis
         svg.append("g")
