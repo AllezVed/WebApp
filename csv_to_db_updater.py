@@ -35,5 +35,8 @@ with open('Test.csv','r') as test_table:
     dr = csv.DictReader(test_table,  ["SiteID", "tstamp", "Reading", "Unit"]) # comma is default delimiter
     to_db = [(i['SiteID'], i['tstamp'], i['Reading'], i['Unit']) for i in dr]
 
-cur.executemany("UPDATE meter SET ('?,?,?,?'), to_db)
-con.commit()
+# cur.executemany("UPDATE meter SET ('?,?,?,?'), to_db)
+
+cur.executemany("INSERT INTO meter VALUES (?,?,?,?);", to_db)
+
+con.commit() 
