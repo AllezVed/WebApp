@@ -28,15 +28,16 @@
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-middle">
               <li><a href="#Home">Home</a></li>
-              <li><form name="cat" method="post">
-                <select id="data-picker" name = 'select_me'>
+              <li><form name="cat" method="post" action="{{ url_for('test') }}">
+                <select id="data-picker" name = 'select_me' class="selectpicker form-control"x>
                   {% for s in sites %}
                   <option value = "{{ s.LocationID }}">{{ s.LocationID }} </option>
                   {% endfor %}
                   <!-- <option value="INC-17">INC-17</option>
                   <option value="Utoy Railroad">Utoy Railroad</option> -->
-              </select></li>
-            </form>
+              </select></form>
+            </li>
+            
               <li><select id="prop-picker" name = 'sitess'>
                
                 <option value="Level">Level</option>

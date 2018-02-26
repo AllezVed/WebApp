@@ -9,8 +9,8 @@ DATABASE = 'test_db.db'
 def index():
     # site_list = list_function()
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
-    select = request.form.get('s.LocationID')
-    print(str(select))
+    select = request.form.get('select_me')
+    print(select)
     d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
     print(d3_source)
     return render_template('index.html', sites = site_list, select = select)
@@ -59,5 +59,10 @@ def static_proxy(path):
   # send_static_file will guess the correct MIME type
   return app.send_static_file(path)
 
+
+@app.route('/test')
+def test():
+    select_1 = request.form.get('select_me')
+    return(str(select_1))
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port='80')
