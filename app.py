@@ -5,15 +5,15 @@ app = Flask (__name__)
 
 DATABASE = 'test_db.db'
 
-@app.route('/')
+@app.route('/', methods = ['GET', 'POST'])
 def index():
     # site_list = list_function()
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
     select = str(request.form.get('select_me'))
    
-    print(select)
-    # d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
-    # print(d3_source)
+    
+    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select, ))
+    print(d3_source)
    
     return render_template('index.html', sites = site_list, select = select)
 # def connect_db():
@@ -64,8 +64,9 @@ def static_proxy(path):
 
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
-    select = request.form.get('select_me')
-    return(str(select)) # to see value of select
+    select = str(request.form.get('select_me'))
+    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,) )
+    return(str(d3_source)) # to see value of select
 
 
 if __name__ == '__main__':
