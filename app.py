@@ -9,13 +9,13 @@ DATABASE = 'test_db.db'
 def index():
     # site_list = list_function()
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
-    select = request.args.get('select_me')
+    select = str(request.form.get('select_me'))
    
-    print(site_list)
+    print(select)
     # d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
     # print(d3_source)
    
-    return render_template('index.html', sites = site_list)
+    return render_template('index.html', sites = site_list, select = select)
 # def connect_db():
 #     """Connects to the specific database."""
 #     rv = sqlite3.connect(DATABASE)
@@ -64,7 +64,7 @@ def static_proxy(path):
 
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
-    select = request.form['select_me']
+    select = request.form.get('select_me')
     return(str(select)) # to see value of select
 
 
