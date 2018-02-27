@@ -1,55 +1,71 @@
 <head>
-    <meta-charset="UTF-8">
+  <meta-charset="UTF-8">
     <title>Flow Monitoring Stations</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
     <link rel="icon" href="https://www.stantec.com/static/img/favicon/favicon.ico">
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+  <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#"><b>Flow Meter Visualization</b></a>
-          </div>
-      
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-middle">
-              <li><a href="#Home">Home</a></li>
-              <li><form name="cat" method="POST" action="{{ url_for('test') }}">
-                <select id="data-picker" name = 'select_me' class="selectpicker form-control">
-                  {% for s in sites %}
-                    <option value = "{{ s.LocationID }}" SELECTED>{{ s.LocationID }} </option>
-                  {% endfor %}
-                  <!-- <option value="INC-17">INC-17</option>
-                  <option value="Utoy Railroad">Utoy Railroad</option> -->
-              </select></form>
-            </li>
-            
-              <li><select id="prop-picker" name = 'sitess'>
-               
-                <option value="Level">Level</option>
-                <option value="Rainfall">Rainfall</option>
-            </select></li>
-            </ul>
-            <button class= "btn btn-default btn-success" id="button_download">Download</button>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          <b>Flow Meter Visualization</b>
+        </a>
+      </div>
 
-      </nav>
-      <p>{{ select }}</p>
-    <script type="text/javascript" src ="{{ url_for('static', filename='script.js') }}"></script>
- 
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse form-group" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-middle">
+          <li>
+            <a href="#Home">Home</a>
+          </li>
+        </ul>
+        <form class="form-inline" method="POST" action="{{ url_for('test') }}">
+          <div class="form-group">
+              <select id="data-picker" name="select_me" class="selectpicker form-control">
+                <option value="0"> Please Select Monitoring Station </option>
+                {% for s in sites %}
+                <option value="{{ s.LocationID }}"> {{ s.LocationID }} </option>
+                {% endfor %}
+                <!-- <option value="INC-17">INC-17</option>
+                      <option value="Utoy Railroad">Utoy Railroad</option> -->
+              </select>
+              <input type ="text" name = "input">
+          </div>
+        </form>
+
+
+        <select id="prop-picker" name='sitess'>
+
+          <option value="Level">Level</option>
+          <option value="Rainfall">Rainfall</option>
+        </select>
+
+        <button class="btn btn-default btn-success" id="button_download">Download</button>
+
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+
+  </nav>
+
+
+  <!-- <p>{{ select_one }}</p> -->
+  <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>

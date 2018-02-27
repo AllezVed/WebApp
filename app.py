@@ -5,15 +5,17 @@ app = Flask (__name__)
 
 DATABASE = 'test_db.db'
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/')
 def index():
     # site_list = list_function()
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
-    select = request.form.get('select_me')
-    print(select)
-    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
-    print(d3_source)
-    return render_template('index.html', sites = site_list, select = select)
+    select = request.args.get('select_me')
+   
+    print(site_list)
+    # d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
+    # print(d3_source)
+   
+    return render_template('index.html', sites = site_list)
 # def connect_db():
 #     """Connects to the specific database."""
 #     rv = sqlite3.connect(DATABASE)
@@ -60,9 +62,11 @@ def static_proxy(path):
   return app.send_static_file(path)
 
 
-@app.route('/test')
+@app.route('/test', methods = ['GET', 'POST'])
 def test():
-    select_1 = request.form.get('select_me')
-    return(str(select_1))
+    select = request.form['select_me']
+    return(str(select)) # to see value of select
+
+
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port='80')
+    app.run(debug = True)
