@@ -1,4 +1,6 @@
 import sqlite3
+import csv
+from datetime import datetime
 from flask import *
 app = Flask (__name__)
 
@@ -11,15 +13,9 @@ def index():
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
     select = str(request.form.get('select_me'))
    
-<<<<<<< HEAD
-    
-    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select, ))
-    print(d3_source)
-=======
     # print(site_list)
     # d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
     # print(d3_source)
->>>>>>> 31aa5d38103f9f3f3a5c2ee1065fd858801a8034
    
     return render_template('index.html', sites = site_list, select = select)
 # def connect_db():
@@ -70,16 +66,17 @@ def static_proxy(path):
 
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
-<<<<<<< HEAD
     select = str(request.form.get('select_me'))
-    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,) )
-    return(str(d3_source)) # to see value of select
-=======
-    select = request.form.get('select_me')
-    d3_source = [(row[0], row[1]) for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', [str(select)]]
-    print(str(d3_source))
-    return "<p>" + str(d3_source) + "</p>" # to see value of select
->>>>>>> 31aa5d38103f9f3f3a5c2ee1065fd858801a8034
+    d3_source = [{"Timestamp":row[0], "Reading" : row[1]} for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,))]
+    # print(str(d3_source))
+
+    with open("./static/"+select+".csv",'w', newline ='') as f:
+        #Using Dict Keys as fieldnames for CSV file header
+        writer = csv.DictWriter(f,d3_source[0].keys())
+        writer.writeheader()
+        for d in d3_source:
+            writer.writerow(d)
+    return str(d3_source) # to see value of select
 
 
 if __name__ == '__main__':

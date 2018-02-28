@@ -29,11 +29,11 @@ import sqlite3, csv
 # con = sqlite3.connect(":memory:")
 con = sqlite3.connect("test_db.db")
 cur = con.cursor()
-cur.executescript("DROP TABLE IF EXISTS meter;CREATE TABLE meter ( SiteID STR, tstamp DATETIME, Reading FLOAT, Unit STR, LocationID STR, Property STR)") 
+cur.executescript("DROP TABLE IF EXISTS meter;CREATE TABLE meter ( tstamp DATETIME, SiteID STR, Reading FLOAT, Unit STR, LocationID STR, Property STR)") 
 
 with open('Test.csv','r') as test_table:
-    dr = csv.DictReader(test_table,  ["SiteID", "tstamp", "Reading", "Unit", "LocationID","Property"]) # comma is default delimiter
-    to_db = [(i['SiteID'], i['tstamp'], i['Reading'], i['Unit'], i['LocationID'], i['Property']) for i in dr]
+    dr = csv.DictReader(test_table,  ["tstamp", "SiteID", "Reading", "Unit", "LocationID","Property"]) # comma is default delimiter
+    to_db = [(i['tstamp'], i['SiteID'], i['Reading'], i['Unit'], i['LocationID'], i['Property']) for i in dr]
 
 cur.executemany("INSERT INTO meter VALUES (?,?,?,?,?,?);", to_db)
 con.commit()
