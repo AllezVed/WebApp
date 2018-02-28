@@ -11,7 +11,7 @@ def index():
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
     select = request.args.get('select_me')
    
-    print(site_list)
+    # print(site_list)
     # d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
     # print(d3_source)
    
@@ -64,9 +64,10 @@ def static_proxy(path):
 
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
-    select = request.form['select_me']
-    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
-    return(str(d3_source)) # to see value of select
+    select = request.form.get('select_me')
+    d3_source = [(row[0], row[1]) for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', [str(select)]]
+    print(str(d3_source))
+    return "<p>" + str(d3_source) + "</p>" # to see value of select
 
 
 if __name__ == '__main__':
