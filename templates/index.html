@@ -34,28 +34,28 @@
             <a href="#Home">Home</a>
           </li>
         </ul>
-        <form class="form-inline" method="POST" action="{{ url_for('test') }}">
+        <form class="form-inline" method="POST" action="/">
           <div class="form-group">
-              <select id="data-picker" name="select_me" class="selectpicker form-control">
-                <option value="0"> Please Select Monitoring Station </option>
-                {% for s in sites %}
-                <option value="{{ s.LocationID }}"> {{ s.LocationID }} </option>
-                {% endfor %}
-                <!-- <option value="INC-17">INC-17</option>
+            <select id="data-picker" name="select_me" class="selectpicker form-control">
+              <option value="0"> Please Select Monitoring Station </option>
+              {% for s in sites %}
+              <option value="{{ s.LocationID }}"> {{ s.LocationID }} </option>
+              {% endfor %}
+              <!-- <option value="INC-17">INC-17</option>
                       <option value="Utoy Railroad">Utoy Railroad</option> -->
-              </select>
+            </select>
+            <select id="prop-picker" name='sitess'>
+
+              <option value="Level">Level</option>
+              <option value="Rainfall">Rainfall</option>
+            </select>
+    
+            <button class="btn btn-default btn-success" id="button_download">Download</button>
           </div>
-          <button class="btn btn-default btn-success">GO </button>
         </form>
 
 
-        <select id="prop-picker" name='sitess'>
-
-          <option value="Level">Level</option>
-          <option value="Rainfall">Rainfall</option>
-        </select>
-
-        <button class="btn btn-default btn-success" id="button_download">Download</button>
+       
 
       </div>
       <!-- /.navbar-collapse -->

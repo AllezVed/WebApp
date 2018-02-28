@@ -66,12 +66,12 @@ var drawChart = function (csvFile) {
             };
         },
         function (error, data) {
-            // data.forEach(function(d){
-            //     d.Timestamp = parseDate(d.Timestamp);
-            //     d.reading = parseFloat(d.Reading);
-            // });
+            data.forEach(function(d){
+                d.Timestamp = parseDate(d.Timestamp);
+                d.reading = parseFloat(d.Reading);
+            });
             // Scale the range of the data
-            console.log(data);
+            
             x.domain(d3.extent(data, function (d) {
                 return d.timestamp;
             }));
@@ -101,12 +101,63 @@ var drawChart = function (csvFile) {
 
 };
 
+
+
+var drawChartJSON = function (data) {
+            // Scale the range of the data
+            svg.selectAll("*").remove();
+            x.domain(d3.extent(data, function (d) {
+                return d.timestamp;
+            }));
+            y.domain([0, d3.max(data, function (d) {
+                return d.reading;
+            })]);
+
+            // Add the valueline path.
+            svg.append("path")
+                .attr("class", "line")
+                .attr("d", valueline(data));
+
+            // Add the X Axis
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + h + ")")
+                .call(xAxis);
+
+            // Add the Y Axis
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+
+        
+        }
+
+
+
 // drawChart("INC-17.csv");
+var selectedValue = $("#data-picker").val();
 
 d3.select("#data-picker").on("change", function on_change() {
-    var val_string = this.value + ".csv";
-    svg.selectAll("*").remove();
-    drawChart(val_string);
+    var selectedValue = this.value;
+    $.get("/test_one", {
+        query: selectedValue
+    }, function (resultJson) {
+        var result = JSON.parse(resultJson).map(function(d){
+            return {
+                timestamp : parseDate(d.Timestamp),
+                reading : d.Reading
+            }
+        });
+        console.log(result);
+        drawChartJSON(result);
+        
+    });
+    // var val_string = this.value + ".csv";
+    // svg.selectAll("*").remove();
+    // console.log(this.value);
+    // drawChart(val_string);
+
 });
 
 d3.select("#button_download").on("click", function on_click() {
