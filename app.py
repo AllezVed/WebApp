@@ -65,7 +65,8 @@ def static_proxy(path):
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
     select = request.form['select_me']
-    return(str(select)) # to see value of select
+    d3_source = query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (str(select),))
+    return(str(d3_source)) # to see value of select
 
 
 if __name__ == '__main__':
