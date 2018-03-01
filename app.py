@@ -2,6 +2,7 @@ import sqlite3
 import csv
 from datetime import datetime
 import json
+import StringIO
 from flask import *
 app = Flask (__name__)
 
@@ -100,6 +101,12 @@ def test_one():
     d3_source = [{"Timestamp":row[0], "Reading" : row[1]} for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (q_string,))]
     d3_source_json = json.dumps(d3_source)
     return d3_source_json
+
+@app.route('/return_csv')
+def return_csv():
+    
+
+    
 
 if __name__ == '__main__':
     app.run(debug = True)

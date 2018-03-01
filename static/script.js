@@ -66,12 +66,12 @@ var drawChart = function (csvFile) {
             };
         },
         function (error, data) {
-            data.forEach(function(d){
+            data.forEach(function (d) {
                 d.Timestamp = parseDate(d.Timestamp);
                 d.reading = parseFloat(d.Reading);
             });
             // Scale the range of the data
-            
+
             x.domain(d3.extent(data, function (d) {
                 return d.timestamp;
             }));
@@ -104,36 +104,55 @@ var drawChart = function (csvFile) {
 
 
 var drawChartJSON = function (data) {
-            // Scale the range of the data
-            svg.selectAll("*").remove();
-            x.domain(d3.extent(data, function (d) {
-                return d.timestamp;
-            }));
-            y.domain([0, d3.max(data, function (d) {
-                return d.reading;
-            })]);
+    // Scale the range of the data
+    svg.selectAll("*").remove();
+    x.domain(d3.extent(data, function (d) {
+        return d.timestamp;
+    }));
+    y.domain([0, d3.max(data, function (d) {
+        return d.reading;
+    })]);
 
-            // Add the valueline path.
-            svg.append("path")
-                .attr("class", "line")
-                .attr("d", valueline(data));
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(data));
 
-            // Add the X Axis
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + h + ")")
-                .call(xAxis);
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + h + ")")
+        .call(xAxis);
 
-            // Add the Y Axis
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis);
-
-
-        
-        }
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
 
 
+
+}
+
+//Returns a csv from an array of objects with
+// values separated by tabs and rows separated by newlines
+function CSV(array) {
+    // Use first element to choose the keys and the order
+    var keys = Object.keys(array[0]);
+
+    // Build header
+    var result = keys.join(",") + "\n";
+
+    // Add the rows
+    array.forEach(function (obj) {
+        keys.forEach(function (k, ix) {
+            if (ix) result += "\t";
+            result += obj[k];
+        });
+        result += "\n";
+    });
+
+    return result;
+}
 
 // drawChart("INC-17.csv");
 var selectedValue = $("#data-picker").val();
@@ -143,15 +162,15 @@ d3.select("#data-picker").on("change", function on_change() {
     $.get("/test_one", {
         query: selectedValue
     }, function (resultJson) {
-        var result = JSON.parse(resultJson).map(function(d){
+        var result = JSON.parse(resultJson).map(function (d) {
             return {
-                timestamp : parseDate(d.Timestamp),
-                reading : d.Reading
+                timestamp: parseDate(d.Timestamp),
+                reading: d.Reading
             }
         });
         console.log(result);
         drawChartJSON(result);
-        
+
     });
     // var val_string = this.value + ".csv";
     // svg.selectAll("*").remove();
@@ -161,7 +180,13 @@ d3.select("#data-picker").on("change", function on_change() {
 });
 
 d3.select("#button_download").on("click", function on_click() {
-    var val_string = $("#data-picker").val() + ".csv";
-    console.log(val_string)
-    window.open(val_string);
+    var val_string = $("#data-picker").val();
+    $.get("/test_one", {
+        query: val_string
+    }, function (resultJson) {
+        var result = CSV(resultJson);
+        window.open(result);
+    });
+   
+    
 });
