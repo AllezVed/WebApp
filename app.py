@@ -1,6 +1,9 @@
 import sqlite3
 import csv
 from datetime import datetime
+from io import StringIO
+from werkzeug.datastructures import Headers
+from werkzeug.wrappers import Response
 import json
 from flask import *
 app = Flask (__name__)
@@ -13,17 +16,17 @@ def index():
     # site_list = list_function()
     site_list = [site for site in query_db('SELECT DISTINCT LocationID from meter')]
     # select = str(request.form.get('select_me'))
-    if request.method == "POST":
-        select = str(request.form.get('select_me'))
-        d3_source = [{"Timestamp":row[0], "Reading" : row[1]} for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,))]
-    # print(str(d3_source))
+    # if request.method == "POST":
+    #     select = str(request.form.get('select_me'))
+    #     d3_source = [{"Timestamp":row[0], "Reading" : row[1]} for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,))]
+    # # print(str(d3_source))
 
-        with open("./static/"+select+".csv",'w', newline ='') as f:
-            #Using Dict Keys as fieldnames for CSV file header
-            writer = csv.DictWriter(f,d3_source[0].keys())
-            writer.writeheader()
-            for d in d3_source:
-                writer.writerow(d)
+    #     with open("./static/"+select+".csv",'w', newline ='') as f:
+    #         #Using Dict Keys as fieldnames for CSV file header
+    #         writer = csv.DictWriter(f,d3_source[0].keys())
+    #         writer.writeheader()
+    #         for d in d3_source:
+    #             writer.writerow(d)
         
         
     # print(site_list)
@@ -79,20 +82,20 @@ def static_proxy(path):
   return app.send_static_file(path)
 
 
-@app.route('/test', methods = ['GET', 'POST'])
-def test():
-    select = str(request.form.get('select_me'))
-    d3_source = [{"Timestamp":row[0], "Reading" : row[1]} for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,))]
-    # print(str(d3_source))
+# @app.route('/test', methods = ['GET', 'POST'])
+# def test():
+#     select = str(request.form.get('select_me'))
+#     d3_source = [{"Timestamp":row[0], "Reading" : row[1]} for row in query_db('SELECT tstamp, Reading from meter WHERE LocationID = ? ', (select,))]
+#     # print(str(d3_source))
 
-    with open("./static/"+select+".csv",'w', newline ='') as f:
-        #Using Dict Keys as fieldnames for CSV file header
-        writer = csv.DictWriter(f,d3_source[0].keys())
-        writer.writeheader()
-        for d in d3_source:
-            writer.writerow(d)
+#     with open("./static/"+select+".csv",'w', newline ='') as f:
+#         #Using Dict Keys as fieldnames for CSV file header
+#         writer = csv.DictWriter(f,d3_source[0].keys())
+#         writer.writeheader()
+#         for d in d3_source:
+#             writer.writerow(d)
    
-    return str(d3_source) # to see value of select
+#     return str(d3_source) # to see value of select
 
 @app.route('/test_one')
 def test_one():
@@ -102,8 +105,38 @@ def test_one():
     d3_source_json = json.dumps(d3_source)
     return d3_source_json
 
-# @app.route('/return_csv')
-# def return_csv():
+@app.route('/download')
+def download_log():
+    def generate():
+        csv_file = test_one()
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(('Timestamp', 'Reading'))
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each log item
+        for item in csv_file:
+            w.writerow((
+                item[0],# format datetime as string
+                item[1]  
+            ))
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+        # add a filename
+    headers = Headers()
+    headers.set('Content-Disposition', 'attachment', filename='log.csv')
+
+    # stream the response as the data is generated
+    return Response(
+        stream_with_context(generate()),
+        mimetype='text/csv', headers=headers
+    )
     
 if __name__ == '__main__':
     app.run(debug = True)
