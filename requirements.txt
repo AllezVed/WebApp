@@ -11,7 +11,7 @@ cytoolz==0.8.2
 dill==0.2.7.1
 Django==1.11.4
 en-core-web-sm==2.0.0
-Flask==0.12.2
+Flask==1.0
 ftfy==4.4.3
 funcy==1.10
 future==0.16.0
