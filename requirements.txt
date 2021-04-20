@@ -32,7 +32,7 @@ pandas==0.21.0
 pathlib==1.0.1
 plac==0.9.6
 preshed==1.0.0
-py==1.5.2
+py==1.10.0
 pyLDAvis==2.1.1
 pyreadline==2.1
 Pyro4==4.63
